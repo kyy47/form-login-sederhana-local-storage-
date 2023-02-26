@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        #root {
+            background-color: tomato;
+            height: 100vh;
+            text-align: center;
+            font-size: 2em;
+        }
+    </style>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="root">
+        <div id="cont-utama">
+            <input type="text" id="username" placeholder="username">
+            <input type="password" id="password" placeholder="password">
+            <button onclick="onLogin()" id="login">LOGIN</button>
+            <button id="logout" onclick="onLogout()">LOGOUT</button>
+            <button id="create-account" onclick="onMenuCreateAccount()">CREATE ACCOUNT</button>
+        </div>
+        <div id="cont-create-account">
+            <input type="text" id="createUsername" placeholder="username">
+            <input type="text" id="createPassword" placeholder="password">
+            <input type="text" id="createName" placeholder="name">
+            <br>
+            <button onclick="onCreateAccount()">SUBMIT</button>
+            <button onclick="onBack()">BACK</button>
+        </div>
+    </div>
+    <script>
+        const root = document.getElementById("root")
+        const usernameInput = document.getElementById("username")
+        const passwordInput = document.getElementById("password")
+        const logout = document.getElementById("logout")
+        const login = document.getElementById("login")
+        const createAccount = document.getElementById("create-account")
+        const contUtama = document.getElementById("cont-utama")
+        const contCreateAccount = document.getElementById("cont-create-account")
+        contCreateAccount.style.display = "none"
+        logout.style.display = "none"
+        function onLogin() {
+
+            console.log(usernameInput.value)
+            console.log(passwordInput.value)
+            if (usernameInput.value == "admin" && passwordInput.value == "123") {
+                localStorage.setItem("username", usernameInput.value)
+                localStorage.setItem("role", "admin")
+            } else if (usernameInput.value == localStorage.getItem("username")) {
+                localStorage.setItem("username", usernameInput.value)
+                localStorage.setItem("role", "basic")
+            }else{
+                alert("Username or Password is Wrong!")
+            }
+            location.reload()
+        }
+
+        if (localStorage.getItem("role")) {
+            logout.style.display = "block"
+            createAccount.style.display = "none"
+            login.style.display = "none"
+            if (localStorage.getItem("role") == "admin") {
+                usernameInput.style.display = "none"
+                passwordInput.style.display = "none"
+                const selamatDatang = document.createElement("h1")
+                selamatDatang.textContent = "Selamat Datang Admin"
+                root.appendChild(selamatDatang)
+            } else if (localStorage.getItem("role") == "basic") {
+                usernameInput.style.display = "none"
+                passwordInput.style.display = "none"
+                const selamatDatang = document.createElement("h1")
+                selamatDatang.textContent = `Selamat Datang ${localStorage.getItem("name")}`
+                root.appendChild(selamatDatang)
+
+            }
+        }
+
+        function onLogout() {
+            localStorage.clear()
+            location.reload()
+        }
+        function onMenuCreateAccount() {
+            contUtama.style.display = "none"
+            contCreateAccount.style.display = "block"
+        }
+        function onCreateAccount() {
+            const usernameInput = document.getElementById("createUsername")
+            const passwordInput = document.getElementById("createPassword")
+            const nameInput = document.getElementById("createName")
+            if (usernameInput.value.trim() == "") {
+                alert("Username blum diisi!")
+            } else if (passwordInput.value.trim() == "") {
+                alert("Password blum diisi!")
+            } else if (nameInput.value.trim() == "") {
+                alert("Name blum diisi!")
+            } else {
+                const conf = confirm("Data is Correct?")
+                if (conf == true) {
+                    localStorage.setItem("username", usernameInput.value)
+                    localStorage.setItem("password", passwordInput.value)
+                    localStorage.setItem("name", nameInput.value)
+                    alert("Data Sudah Disimpan")
+                    usernameInput.value = ""
+                    passwordInput.value = ""
+                    nameInput.value = ""
+                }
+            }
+
+        }
+
+        function onBack() {
+            contUtama.style.display = "block"
+            contCreateAccount.style.display = "none"
+        }
+    </script>
+</body>
+
+</html>
